@@ -1,0 +1,175 @@
+﻿<Window x:Class="GUI.Views.UserView"
+        x:Name="UserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUI.Views"
+        xmlns:vm="clr-namespace:GUI.ViewModels"
+        mc:Ignorable="d"
+        Title="UserView" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowStyle="None">
+    <Window.DataContext>
+        <vm:UserViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition />
+            <RowDefinition Height="0.13*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="10, 5, 5, 5 ">
+            <WrapPanel>
+                <Label FontSize="16">Логин пользователя: </Label>
+                <TextBlock FontSize="16" VerticalAlignment="Center"
+                           Text="{Binding User.Username}"></TextBlock>
+            </WrapPanel>
+
+            <WrapPanel>
+                <Label FontSize="16">ФИО:</Label>
+                <TextBlock FontSize="16" VerticalAlignment="Center" 
+                           Text="{Binding User.FullName}"></TextBlock>
+            </WrapPanel>
+
+            <WrapPanel>
+                <Label FontSize="16">Адрес:</Label>
+                <TextBlock FontSize="16" VerticalAlignment="Center" 
+                           Text="{Binding User.Address}"></TextBlock>
+            </WrapPanel>
+
+            <WrapPanel>
+                <Label FontSize="16">Номер телефона:</Label>
+                <TextBlock FontSize="16" VerticalAlignment="Center"
+                            Text="{Binding User.Address}"></TextBlock>
+            </WrapPanel>
+        </StackPanel>
+
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="1" Visibility="{Binding Visibility, Converter={StaticResource VisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="0.3*"/>
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Width="140" Height="40" Command="{Binding DeletePhotoCommand}" CommandParameter="{Binding SelectedPhoto}">Удалить фотографию</Button>
+                    <Button Grid.Column="1" Width="140" Height="40" Command="{Binding AddPhotoCommand}">Добавить фотографию</Button>
+                </Grid>
+
+                <ScrollViewer Grid.Row="0">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SelectedPet.Nickname}" FontSize="24" HorizontalAlignment="Center"></TextBlock>
+                        <WrapPanel>
+                            <Label FontSize="16">Вид:</Label>
+                            <TextBlock VerticalAlignment="Center" Text="{Binding SelectedPet.Kind}" FontSize="16"></TextBlock>
+                        </WrapPanel>
+
+                        <WrapPanel>
+                            <Label FontSize="16">Порода:</Label>
+                            <TextBlock VerticalAlignment="Center" Text="{Binding SelectedPet.Breed}" FontSize="16"></TextBlock>
+                        </WrapPanel>
+
+                        <WrapPanel>
+                            <Label FontSize="16">Условия содержания:</Label>
+                            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding SelectedPet.Conditions}" FontSize="16"></TextBlock>
+                        </WrapPanel>
+
+                        <WrapPanel>
+                            <Label FontSize="16">Дата прибытия:</Label>
+                            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding SelectedPet.ArrivalDate.Date}" FontSize="16"></TextBlock>
+                        </WrapPanel>
+
+                        <WrapPanel>
+                            <Label FontSize="16">Цвет:</Label>
+                            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding SelectedPet.Color}" FontSize="16"></TextBlock>
+                        </WrapPanel>
+
+                        <WrapPanel>
+                            <Label FontSize="16">Состояние здоровья:</Label>
+                            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding SelectedPet.HealthStatus}" FontSize="16"></TextBlock>
+                        </WrapPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Grid.Row="1">
+                    <ListView ItemsSource="{Binding PetPhotos}"
+                                  SelectedItem="{Binding SelectedPhoto}">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="4" HorizontalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock Width="15"></TextBlock>
+                                    <Image Source="{Binding Path}" Width="64"></Image>
+                                    <TextBlock Width="15"></TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+                
+
+            </Grid>
+            <StackPanel Grid.Column="0">
+                <Label HorizontalAlignment="Center" FontSize="18" FontWeight="Medium">Ваши животные</Label>
+                <ListView DockPanel.Dock="Bottom"
+                          SelectedItem="{Binding SelectedPet}" 
+                          ItemsSource="{Binding UserPets}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <Image Source="{Binding Photos[0].Path}" Height="60" HorizontalAlignment="Center" Width="80"></Image>
+                                <TextBlock Width="20"></TextBlock>
+                                <TextBlock Text="{Binding Nickname}" FontSize="16" 
+                                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Width="20"></TextBlock>
+                                <TextBlock Text="{Binding Kind}" FontSize="16" 
+                                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+            
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Width="160" Height="40" FontSize="22" 
+                    BorderBrush="Aqua" Background="AliceBlue" FontWeight="Medium"
+                    Command="{Binding LogoutCommand}" 
+                    CommandParameter="{Binding ElementName=UserWindow}">Logout</Button>
+
+            <Button Grid.Column="1" Width="160" Height="40" FontSize="22" 
+                    BorderBrush="Aqua" Background="AliceBlue" FontWeight="Medium"
+                    Command="{Binding QuitCommand}" 
+                    CommandParameter="{Binding ElementName=UserWindow}">Quit</Button>
+        </Grid>
+    </Grid>
+</Window>
